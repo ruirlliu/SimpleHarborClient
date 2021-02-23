@@ -1,2 +1,2 @@
-# -HarborClient
-Harbor Java Client
+# SimpleHarborClient
+Simple Harbor Java Client
