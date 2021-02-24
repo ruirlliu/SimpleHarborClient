@@ -1,11 +1,11 @@
 package org.harbor.client.client.v1;
 
-import com.harbor.client.v1.exception.HarborClientException;
-import com.harbor.client.v1.flag.ResponseConfigure;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.util.EntityUtils;
+import org.harbor.client.client.v1.exception.HarborClientException;
+import org.harbor.client.client.v1.flag.ResponseConfigure;
 
 import java.io.IOException;
 
@@ -13,7 +13,7 @@ import java.io.IOException;
  * @author liurui
  * @date 2021/2/5
  */
-public class DefaultResponseHandler implements /*ResponseFailedHandler,*/ ResponseHandler<HarborResponse<String>> {
+public class DefaultResponseHandler implements /*ResponseFailedHandler,*/ ResponseHandler<HarborResponse> {
 
 //    private static ObjectMapper mapper = new ObjectMapper();
 
@@ -41,9 +41,9 @@ public class DefaultResponseHandler implements /*ResponseFailedHandler,*/ Respon
     }*/
 
     @Override
-    public HarborResponse<String> handleResponse(HttpResponse response) throws IOException {
+    public HarborResponse handleResponse(HttpResponse response) throws IOException {
         int statusCode = response.getStatusLine().getStatusCode();
-        HarborResponse<String> harborResponse = new HarborResponse<>(statusCode);
+        HarborResponse harborResponse = new HarborResponse(statusCode);
         HttpEntity entity = response.getEntity();
         String body = null;
         if (entity != null) {

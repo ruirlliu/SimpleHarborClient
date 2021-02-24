@@ -1,11 +1,11 @@
 package org.harbor.client.client.v2.operation;
 
 import cn.hutool.core.collection.CollUtil;
-import com.harbor.client.data.Project;
-import com.harbor.client.v2.operation.base.GetOp;
-import com.harbor.client.v2.operation.base.ListOp;
-import com.harbor.client.v2.operation.exec.Exec;
-import com.harbor.client.v2.operation.exec.ExecCmd;
+import org.harbor.client.client.model.Project;
+import org.harbor.client.client.v2.operation.base.GetOp;
+import org.harbor.client.client.v2.operation.base.ListOp;
+import org.harbor.client.client.v2.operation.exec.Exec;
+import org.harbor.client.client.v2.operation.exec.ExecCmd;
 
 import java.util.List;
 

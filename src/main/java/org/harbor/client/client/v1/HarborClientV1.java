@@ -1,6 +1,7 @@
 package org.harbor.client.client.v1;
 
-import com.harbor.client.v1.op.Projects;
+
+import org.harbor.client.client.v1.op.Projects;
 
 /**
  * @author liurui

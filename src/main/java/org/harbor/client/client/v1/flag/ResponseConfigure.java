@@ -7,7 +7,7 @@ package org.harbor.client.client.v1.flag;
 public enum ResponseConfigure {
 
     /**
-     * 请求返回码小于200，大于300，是否抛出异常
+     * 请求失败，是否抛出异常
      */
     FAILED_THROW(true),
 

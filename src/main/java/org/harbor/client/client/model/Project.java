@@ -1,4 +1,4 @@
-package org.harbor.client.client.data;
+package org.harbor.client.client.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

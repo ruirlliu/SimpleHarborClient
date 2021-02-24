@@ -1,6 +1,7 @@
 package org.harbor.client.client.v2.operation.exec;
 
-import com.harbor.client.data.Project;
+
+import org.harbor.client.client.model.Project;
 
 import java.util.List;
 

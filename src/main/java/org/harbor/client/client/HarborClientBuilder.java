@@ -1,14 +1,15 @@
 package org.harbor.client.client;
 
 import cn.hutool.core.codec.Base64;
-import com.harbor.client.v1.DefaultHarborClientV1;
-import com.harbor.client.v1.HarborClientV1;
-import com.harbor.client.v1.flag.ResponseConfigure;
-import com.harbor.client.v2.DefaultHarborClient;
-import com.harbor.client.v2.HarborClient;
+import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.harbor.client.client.v1.DefaultHarborClientV1;
+import org.harbor.client.client.v1.HarborClientV1;
+import org.harbor.client.client.v1.flag.ResponseConfigure;
+import org.harbor.client.client.v2.DefaultHarborClient;
+import org.harbor.client.client.v2.HarborClient;
 
 import java.util.concurrent.TimeUnit;
 
@@ -96,7 +97,10 @@ public class HarborClientBuilder {
 
     private CloseableHttpClient createClient() {
         return HttpClientBuilder.create()
-                .setDefaultRequestConfig(RequestConfig.custom().setConnectTimeout(connectionTimeout).build())
+                .setDefaultRequestConfig(RequestConfig.custom()
+                        .setConnectTimeout(connectionTimeout)
+                        .setCookieSpec(CookieSpecs.IGNORE_COOKIES)
+                        .build())
 //                .setConnectionManager(new PoolingHttpClientConnectionManager())
                 .build();
     }

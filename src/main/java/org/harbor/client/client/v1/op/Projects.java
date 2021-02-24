@@ -1,9 +1,12 @@
 package org.harbor.client.client.v1.op;
 
 import cn.hutool.core.util.StrUtil;
-import com.harbor.client.data.Project;
-import com.harbor.client.v1.DefaultHarborClientV1;
-import com.harbor.client.v1.exception.HarborClientException;
+import org.harbor.client.client.model.ListFilter;
+import org.harbor.client.client.model.Project;
+import org.harbor.client.client.model.ProjectReq;
+import org.harbor.client.client.v1.DefaultHarborClientV1;
+import org.harbor.client.client.v1.HarborResponse;
+import org.harbor.client.client.v1.exception.HarborClientException;
 
 import java.util.List;
 import java.util.Objects;
@@ -18,36 +21,42 @@ public class Projects {
 
     private final DefaultHarborClientV1 client;
 
-    private String filterName;
-
     public Projects(DefaultHarborClientV1 client, String baseApi) {
         this.baseApi = baseApi;
         this.client = client;
     }
 
-    public Projects withName(String name) {
-        this.filterName = name;
-        return this;
-    }
 
-    public List<Project> list() throws HarborClientException {
-        String projectApi = getProjectApi();
-        if (StrUtil.isNotEmpty(filterName)) {
-            projectApi += "?name=" + filterName;
+    public List<Project> list(ListFilter filter) throws HarborClientException {
+        String projectApi = getProjectBaseApi();
+        if (filter != null) {
+            String query = filter.getQuery();
+            int page = filter.getPage();
+            int pageSize = filter.getPageSize();
+            projectApi += "?page=" + page + "&page_size=" + pageSize;
+            if (StrUtil.isNotEmpty(query)) {
+                projectApi += "&name=" + query;
+            }
         }
         return client.list(projectApi, Project.class);
     }
 
     public ProjectHandler withExactName(String name) throws HarborClientException {
         Objects.requireNonNull(name, "name can not be null");
-        return new ProjectHandler(getProjectApi(), name, this);
+        return new ProjectHandler(getProjectBaseApi(), name, this);
     }
+
+    public HarborResponse create(ProjectReq req) {
+        Objects.requireNonNull(req, "req can not be null");
+        return client.post(getProjectBaseApi(), req);
+    }
+
 
     protected DefaultHarborClientV1 getClient() {
         return client;
     }
 
-    private String getProjectApi() {
+    private String getProjectBaseApi() {
         return baseApi + "/projects";
     }
 }

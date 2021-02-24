@@ -7,7 +7,7 @@ import lombok.Data;
  * @date 2021/2/22
  */
 @Data
-public class HarborResponse<T> {
+public class HarborResponse {
 
     private int status;
 
