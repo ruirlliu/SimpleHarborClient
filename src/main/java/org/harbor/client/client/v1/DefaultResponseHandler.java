@@ -10,35 +10,16 @@ import org.harbor.client.client.v1.flag.ResponseConfigure;
 import java.io.IOException;
 
 /**
- * @author liurui
+ * @author lr
  * @date 2021/2/5
  */
-public class DefaultResponseHandler implements /*ResponseFailedHandler,*/ ResponseHandler<HarborResponse> {
-
-//    private static ObjectMapper mapper = new ObjectMapper();
+public class DefaultResponseHandler implements ResponseHandler<HarborResponse> {
 
     private final int flag;
 
     public DefaultResponseHandler(int flag) {
         this.flag = flag;
     }
-
-    /*@Override
-    public boolean isFailed(HttpResponse response) {
-        int statusCode = response.getStatusLine().getStatusCode();
-        return statusCode != HttpStatus.SC_OK;
-    }
-
-    @Override
-    public void handleFailed(HttpResponse response) throws IOException {
-        int statusCode = response.getStatusLine().getStatusCode();
-        HttpEntity entity = response.getEntity();
-        if (entity != null) {
-            String msg = EntityUtils.toString(entity);
-            throw new HarborClientException(statusCode, msg);
-        }
-        throw new HarborClientException(statusCode, "response content empty");
-    }*/
 
     @Override
     public HarborResponse handleResponse(HttpResponse response) throws IOException {

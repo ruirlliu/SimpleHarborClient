@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
- * @author liurui
+ * @author lr
  * @date 2021/2/23
  */
 @Data

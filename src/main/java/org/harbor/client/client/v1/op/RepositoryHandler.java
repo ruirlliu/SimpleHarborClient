@@ -1,10 +1,14 @@
 package org.harbor.client.client.v1.op;
 
+import cn.hutool.http.HttpUtil;
 import org.harbor.client.client.model.Repository;
 import org.harbor.client.client.v1.HarborResponse;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+
 /**
- * @author liurui
+ * @author lr
  * @date 2021/2/23
  */
 public class RepositoryHandler {
@@ -35,11 +39,16 @@ public class RepositoryHandler {
     }
 
     public Artifacts artifacts() {
-        return new Artifacts(repositories.getClient(), getRepositoryApi(), repositoryName);
+        return new Artifacts(repositories.getClient(), repositoryBaseApi, repositoryName);
+    }
+
+    public ArtifactHandler artifact(String reference) {
+        Objects.requireNonNull(repositoryName, "reference can not be null");
+        return artifacts().artifact(reference);
     }
 
     public String getRepositoryApi() {
-        return repositoryBaseApi + "/" + repositoryName;
+        return repositoryBaseApi + "/" + HttpUtil.encodeParams(repositoryName, StandardCharsets.UTF_8);
     }
 
 }

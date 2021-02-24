@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
 /**
- * @author liurui
+ * @author lr
  * @date 2021/2/23
  */
 @Data
 @SuperBuilder
 public class ListFilter {
+
+    public static final ListFilter DEFAULT = ListFilter.builder().page(1).pageSize(15).build();
 
     private int page;
 

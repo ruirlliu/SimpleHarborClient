@@ -1,7 +1,7 @@
 package org.harbor.client.client.v1.exception;
 
 /**
- * @author liurui
+ * @author lr
  * @date 2021/2/5
  */
 public class HarborClientException extends RuntimeException {

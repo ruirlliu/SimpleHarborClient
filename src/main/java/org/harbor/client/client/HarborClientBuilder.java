@@ -8,13 +8,11 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.harbor.client.client.v1.DefaultHarborClientV1;
 import org.harbor.client.client.v1.HarborClientV1;
 import org.harbor.client.client.v1.flag.ResponseConfigure;
-import org.harbor.client.client.v2.DefaultHarborClient;
-import org.harbor.client.client.v2.HarborClient;
 
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author liurui
+ * @author lr
  * @date 2021/2/4
  */
 public class HarborClientBuilder {
@@ -83,12 +81,6 @@ public class HarborClientBuilder {
             configure &= ~c.getMask();
         }
         return this;
-    }
-
-    public HarborClient build() {
-
-        return new DefaultHarborClient(createClient(), url, accessToken());
-
     }
 
     public HarborClientV1 buildV1() {

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @author liurui
+ * @author lr
  * @date 2021/2/5
  */
 public class Projects {
@@ -29,14 +29,15 @@ public class Projects {
 
     public List<Project> list(ListFilter filter) throws HarborClientException {
         String projectApi = getProjectBaseApi();
-        if (filter != null) {
-            String query = filter.getQuery();
-            int page = filter.getPage();
-            int pageSize = filter.getPageSize();
-            projectApi += "?page=" + page + "&page_size=" + pageSize;
-            if (StrUtil.isNotEmpty(query)) {
-                projectApi += "&name=" + query;
-            }
+        if (filter == null) {
+            filter = ListFilter.DEFAULT;
+        }
+        String query = filter.getQuery();
+        int page = filter.getPage();
+        int pageSize = filter.getPageSize();
+        projectApi += "?page=" + page + "&page_size=" + pageSize;
+        if (StrUtil.isNotEmpty(query)) {
+            projectApi += "&name=" + query;
         }
         return client.list(projectApi, Project.class);
     }

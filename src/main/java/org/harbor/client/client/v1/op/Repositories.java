@@ -8,7 +8,7 @@ import org.harbor.client.client.v1.DefaultHarborClientV1;
 import java.util.List;
 
 /**
- * @author liurui
+ * @author lr
  * @date 2021/2/23
  */
 public class Repositories {
@@ -26,14 +26,15 @@ public class Repositories {
     // todo: 耗时
     public List<Repository> list(ListFilter filter) {
         String repositoryApi = getRepositoryBaseApi();
-        if (filter != null) {
-            String query = filter.getQuery();
-            int page = filter.getPage();
-            int pageSize = filter.getPageSize();
-            repositoryApi += "?page=" + page + "&page_size=" + pageSize;
-            if (StrUtil.isNotEmpty(query)) {
-                repositoryApi += "&q=" + query;
-            }
+        if (filter == null) {
+            filter = ListFilter.DEFAULT;
+        }
+        String query = filter.getQuery();
+        int page = filter.getPage();
+        int pageSize = filter.getPageSize();
+        repositoryApi += "?page=" + page + "&page_size=" + pageSize;
+        if (StrUtil.isNotEmpty(query)) {
+            repositoryApi += "&q=" + query;
         }
         return client.list(repositoryApi, Repository.class);
     }

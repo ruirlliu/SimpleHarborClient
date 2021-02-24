@@ -3,7 +3,7 @@ package org.harbor.client.client.v1;
 import lombok.Data;
 
 /**
- * @author liurui
+ * @author lr
  * @date 2021/2/22
  */
 @Data
@@ -12,13 +12,6 @@ public class HarborResponse {
     private int status;
 
     private String body;
-
-//    private String msg;
-//
-//    public HarborResponse(int status, String msg) {
-//        this.status = status;
-//        this.msg = msg;
-//    }
 
     public HarborResponse(int status) {
         this.status = status;

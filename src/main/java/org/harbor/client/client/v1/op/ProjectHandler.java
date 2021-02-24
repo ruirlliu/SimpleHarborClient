@@ -8,9 +8,10 @@ import org.harbor.client.client.v1.HarborResponse;
 import org.harbor.client.client.v1.exception.HarborClientException;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
- * @author liurui
+ * @author lr
  * @date 2021/2/23
  */
 public class ProjectHandler {
@@ -26,7 +27,7 @@ public class ProjectHandler {
     }
 
     public Project get() {
-        List<Project> list = projects.list(ListFilter.builder().query(projectName).build());
+        List<Project> list = projects.list(ListFilter.builder().query(projectName).page(1).pageSize(1000).build());
         if (CollUtil.isEmpty(list)) {
             return null;
         }
@@ -64,6 +65,11 @@ public class ProjectHandler {
 
     public Repositories repositories() {
         return new Repositories(projects.getClient(), projectBaseApi, projectName);
+    }
+
+    public RepositoryHandler repository(String repositoryName) {
+        Objects.requireNonNull(repositoryName, "repoKye can not be null");
+        return repositories().repository(repositoryName);
     }
 
 }

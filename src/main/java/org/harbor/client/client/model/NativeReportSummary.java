@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
-import java.util.Date;
-
 /**
  * @author lr
  * @date 2021/2/24
@@ -14,12 +12,16 @@ import java.util.Date;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Tag {
+public class NativeReportSummary {
 
-    private String name;
+    private String severity;
 
-    @JsonProperty("push_time")
-    private Date pushTime;
+    @JsonProperty("complete_percent")
+    private Integer completePercent;
 
+    @JsonProperty("scan_status")
+    private String scanStatus;
+
+    private VulnerabilitySummary summary;
 
 }

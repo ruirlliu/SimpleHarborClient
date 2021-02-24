@@ -1,12 +1,7 @@
 package org.harbor.client.client.v1;
 
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ResponseHandler;
@@ -19,22 +14,20 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.harbor.client.client.model.Type;
 import org.harbor.client.client.v1.exception.HarborClientException;
+import org.harbor.client.client.v1.op.ProjectHandler;
 import org.harbor.client.client.v1.op.Projects;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * @author liurui
+ * @author lr
  * @date 2021/2/5
  */
 public class DefaultHarborClientV1 implements HarborClientV1 {
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
 
     private final String url;
 
@@ -42,13 +35,12 @@ public class DefaultHarborClientV1 implements HarborClientV1 {
 
     private final CloseableHttpClient httpClient;
 
-    private final ResponseHandler<HarborResponse> handler;// = new DefaultResponseHandler(configure);
+    private final ResponseHandler<HarborResponse> handler;
 
     public DefaultHarborClientV1(String url, String accessToken, CloseableHttpClient httpClient, int configure) {
         this.url = url;
         this.accessToken = accessToken;
         this.httpClient = httpClient;
-        // = ResponseConfigure.DEFAULT_CONFIGURE;
         handler = new DefaultResponseHandler(configure);
     }
 
@@ -57,6 +49,11 @@ public class DefaultHarborClientV1 implements HarborClientV1 {
         return new Projects(this, API_BASE);
     }
 
+    @Override
+    public ProjectHandler project(String projectName) {
+        Objects.requireNonNull(projectName, "project name can not be null");
+        return projects().withExactName(projectName);
+    }
 
     public <T> List<T> list(String path, Class<T> object) throws HarborClientException {
         HttpGet httpGet = new HttpGet(url + path);
@@ -66,6 +63,7 @@ public class DefaultHarborClientV1 implements HarborClientV1 {
             if (!response.success()) {
                 return Collections.emptyList();
             }
+            ObjectMapper objectMapper = new ObjectMapper();
             CollectionType collectionType = objectMapper.getTypeFactory().constructCollectionType(List.class, object);
             List<T> list = objectMapper.readValue(response.getBody(), collectionType);
             return list == null ? Collections.emptyList() : list;
@@ -80,6 +78,7 @@ public class DefaultHarborClientV1 implements HarborClientV1 {
         try {
             HarborResponse response = httpClient.execute(httpGet, handler);
             if (response.success()) {
+                ObjectMapper objectMapper = new ObjectMapper();
                 return objectMapper.readValue(response.getBody(), object);
             }
             return null;
@@ -91,6 +90,7 @@ public class DefaultHarborClientV1 implements HarborClientV1 {
     public HarborResponse put(String path, Object o) throws HarborClientException {
         HttpPut httpPut = new HttpPut(url + path);
         addAccessTokenHeader(httpPut);
+        ObjectMapper objectMapper = new ObjectMapper();
         try {
             httpPut.setEntity(new StringEntity(objectMapper.writeValueAsString(o), ContentType.APPLICATION_JSON));
             HarborResponse execute = httpClient.execute(httpPut, handler);
@@ -103,8 +103,11 @@ public class DefaultHarborClientV1 implements HarborClientV1 {
     public HarborResponse post(String path, Object o) throws HarborClientException {
         HttpPost httpPost = new HttpPost(url + path);
         addAccessTokenHeader(httpPost);
+        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            httpPost.setEntity(new StringEntity(objectMapper.writeValueAsString(o), ContentType.APPLICATION_JSON));
+            if (o != null) {
+                httpPost.setEntity(new StringEntity(objectMapper.writeValueAsString(o), ContentType.APPLICATION_JSON));
+            }
             HarborResponse execute = httpClient.execute(httpPost, handler);
             return execute;
         } catch (IOException e) {

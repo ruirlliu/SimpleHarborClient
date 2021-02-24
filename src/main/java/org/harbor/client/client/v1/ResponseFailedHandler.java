@@ -5,7 +5,7 @@ import org.apache.http.HttpResponse;
 import java.io.IOException;
 
 /**
- * @author liurui
+ * @author lr
  * @date 2021/2/5
  */
 public interface ResponseFailedHandler {

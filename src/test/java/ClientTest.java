@@ -1,22 +1,23 @@
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.harbor.client.client.HarborClientBuilder;
 import org.harbor.client.client.model.Artifact;
-import org.harbor.client.client.model.ArtifactType;
+import org.harbor.client.client.model.NativeReportSummary;
 import org.harbor.client.client.model.Project;
 import org.harbor.client.client.model.ProjectMetadata;
 import org.harbor.client.client.model.ProjectReq;
 import org.harbor.client.client.model.Repository;
+import org.harbor.client.client.model.Tag;
 import org.harbor.client.client.v1.HarborClientV1;
 import org.harbor.client.client.v1.HarborResponse;
 import org.harbor.client.client.v1.flag.ResponseConfigure;
+import org.harbor.client.client.v1.op.Tags;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author liurui
+ * @author lr
  * @date 2021/2/23
  */
 public class ClientTest {
@@ -70,9 +71,52 @@ public class ClientTest {
     // list
     @Test
     public void testArtifactList() {
-        List<Artifact> list = clientV1.projects().withExactName("boc").repositories().repository("wartest")
+        List<Artifact> list = clientV1.projects().withExactName("boc001").repositories().repository("http")
                 .artifacts().list(null);
         System.out.println(list);
+        for (Map.Entry<String, NativeReportSummary> entry : list.get(0).getScanOverview().entrySet()) {
+            String key = entry.getKey();
+            System.out.println(key);
+            System.out.println(entry.getValue());
+        }
+    }
+
+    @Test
+    public void testArtifactGet() {
+        Artifact artifact = clientV1.projects().withExactName("boc001").repositories().repository("http")
+                .artifacts().artifact("latest-20200819180420").get();
+        System.out.println(artifact);
+
+    }
+
+    // ---- tag ---
+    @Test
+    public void testTagList() {
+        List<Tag> tags = clientV1.projects().withExactName("boyun").repositories().repository("hello-kubernetes")
+                .artifacts().artifact("1.5").tags().list(null);
+        System.out.println(tags);
+
+        Tags tag = clientV1.project("boyun").repository("hello-kubernetes").artifact("1.5").tags();
+        List<Tag> list = tag.list(null);
+        System.out.println(list);
+    }
+
+    @Test
+    public void testTagNameDelete() {
+
+        HarborResponse delete = clientV1.project("boyun").repository("hello-kubernetes")
+                .artifact("1.5").tags().delete("test");
+
+        System.out.println(delete);
+    }
+
+    @Test
+    public void testArtifactScan() {
+        HarborResponse scan = clientV1.project("boyun")
+                .repository("ci11")
+                .artifact("latest-20191118142130")
+                .scan();
+        System.out.println(scan);
     }
 
 
