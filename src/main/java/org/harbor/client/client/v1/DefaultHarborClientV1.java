@@ -15,8 +15,11 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.harbor.client.client.v1.exception.HarborClientException;
+import org.harbor.client.client.v1.op.GeneralSystemInfo;
 import org.harbor.client.client.v1.op.ProjectHandler;
 import org.harbor.client.client.v1.op.Projects;
+import org.harbor.client.client.v1.op.Searches;
+import org.harbor.client.client.v1.op.Users;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -53,6 +56,21 @@ public class DefaultHarborClientV1 implements HarborClientV1 {
     public ProjectHandler project(String projectName) {
         Objects.requireNonNull(projectName, "project name can not be null");
         return projects().withExactName(projectName);
+    }
+
+    @Override
+    public Searches search() {
+        return new Searches(this, API_BASE);
+    }
+
+    @Override
+    public GeneralSystemInfo systemInfo() {
+        return new GeneralSystemInfo(this, API_BASE);
+    }
+
+    @Override
+    public Users user() {
+        return new Users(this, API_BASE);
     }
 
     public <T> List<T> list(String path, Class<T> object) throws HarborClientException {

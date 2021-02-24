@@ -1,11 +1,5 @@
 import org.harbor.client.client.HarborClientBuilder;
-import org.harbor.client.client.model.Artifact;
-import org.harbor.client.client.model.NativeReportSummary;
-import org.harbor.client.client.model.Project;
-import org.harbor.client.client.model.ProjectMetadata;
-import org.harbor.client.client.model.ProjectReq;
-import org.harbor.client.client.model.Repository;
-import org.harbor.client.client.model.Tag;
+import org.harbor.client.client.model.*;
 import org.harbor.client.client.v1.HarborClientV1;
 import org.harbor.client.client.v1.HarborResponse;
 import org.harbor.client.client.v1.flag.ResponseConfigure;
@@ -117,6 +111,31 @@ public class ClientTest {
                 .artifact("latest-20191118142130")
                 .scan();
         System.out.println(scan);
+    }
+
+    @Test
+    public void testSearch() {
+        Search search = clientV1.search().query("http").doSearch();
+        System.out.println(search);
+    }
+
+    @Test
+    public void testProjectScanner() {
+        ScannerRegistration boc = clientV1.project("boc001").scanner();
+        System.out.println(boc);
+    }
+
+    @Test
+    public void testStorage() {
+        SystemInfo volumes = clientV1.systemInfo().volumes();
+        System.out.println(volumes);
+    }
+
+    @Test
+    public void testUser() {
+        List<User> list = clientV1.user().list();
+        User current = clientV1.user().current();
+        System.out.println(current);
     }
 
 

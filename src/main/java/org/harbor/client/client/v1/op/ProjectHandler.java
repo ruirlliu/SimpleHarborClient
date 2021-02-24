@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import org.harbor.client.client.model.ListFilter;
 import org.harbor.client.client.model.Project;
 import org.harbor.client.client.model.ProjectReq;
+import org.harbor.client.client.model.ScannerRegistration;
 import org.harbor.client.client.v1.HarborResponse;
 import org.harbor.client.client.v1.exception.HarborClientException;
 
@@ -61,6 +62,14 @@ public class ProjectHandler {
 
     public String getProjectName() {
         return projectName;
+    }
+
+    public ScannerRegistration scanner() {
+        Project project = this.get();
+        if (project == null) {
+            throw new HarborClientException(-1, "project " + projectName + " not exist");
+        }
+        return projects.getClient().get(projectBaseApi + "/" + project.getProjectId() + "/scanner", ScannerRegistration.class);
     }
 
     public Repositories repositories() {

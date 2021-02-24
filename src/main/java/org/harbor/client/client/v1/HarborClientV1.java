@@ -1,8 +1,11 @@
 package org.harbor.client.client.v1;
 
 
+import org.harbor.client.client.v1.op.GeneralSystemInfo;
 import org.harbor.client.client.v1.op.ProjectHandler;
 import org.harbor.client.client.v1.op.Projects;
+import org.harbor.client.client.v1.op.Searches;
+import org.harbor.client.client.v1.op.Users;
 
 /**
  * @author lr
@@ -16,5 +19,10 @@ public interface HarborClientV1 {
 
     ProjectHandler project(String projectName);
 
+    Searches search();
+
+    GeneralSystemInfo systemInfo();
+
+    Users user();
 
 }
