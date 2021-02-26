@@ -5,12 +5,14 @@ import lombok.Data;
 
 /**
  * @author lr
- * @date 2021/2/24
+ * @date 2021/2/26
  */
 @Data
-public class SystemInfo {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class Storage {
 
-    private Storage storage;
+    private Long total;
 
+    private Long free;
 
 }

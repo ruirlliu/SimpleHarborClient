@@ -1,9 +1,9 @@
-package org.harbor.client.client.v1.op;
+package org.harbor.client.client.op.impl;
 
 import cn.hutool.core.util.StrUtil;
 import org.harbor.client.client.model.ListFilter;
 import org.harbor.client.client.model.Repository;
-import org.harbor.client.client.v1.DefaultHarborClientV1;
+import org.harbor.client.client.op.RepositoryHandler;
 
 import java.util.List;
 
@@ -11,19 +11,20 @@ import java.util.List;
  * @author lr
  * @date 2021/2/23
  */
-public class Repositories {
+class RepositoriesImpl implements org.harbor.client.client.op.Repositories {
 
     private final String projectBaseApi;
     private final String projectName;
     private final DefaultHarborClientV1 client;
 
-    public Repositories(DefaultHarborClientV1 client, String projectBaseApi, String projectName) {
+    RepositoriesImpl(DefaultHarborClientV1 client, String projectBaseApi, String projectName) {
         this.client = client;
         this.projectBaseApi = projectBaseApi;
         this.projectName = projectName;
     }
 
     // todo: 耗时
+    @Override
     public List<Repository> list(ListFilter filter) {
         String repositoryApi = getRepositoryBaseApi();
         if (filter == null) {
@@ -39,18 +40,17 @@ public class Repositories {
         return client.list(repositoryApi, Repository.class);
     }
 
+    @Override
     public RepositoryHandler repository(String repositoryName) {
-        return new RepositoryHandler(getRepositoryBaseApi(), repositoryName, this);
+        return new RepositoryHandlerImpl(getRepositoryBaseApi(), repositoryName, client);
     }
 
 
-    public String getRepositoryBaseApi() {
+    private String getRepositoryBaseApi() {
         return projectBaseApi + "/" + projectName + "/repositories";
     }
 
-    protected DefaultHarborClientV1 getClient() {
-        return client;
-    }
+
 
 
 }

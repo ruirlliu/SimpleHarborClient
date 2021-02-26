@@ -1,8 +1,11 @@
-package org.harbor.client.client.v1.op;
+package org.harbor.client.client.op.impl;
 
 import cn.hutool.http.HttpUtil;
+import org.harbor.client.client.HarborResponse;
 import org.harbor.client.client.model.Repository;
-import org.harbor.client.client.v1.HarborResponse;
+import org.harbor.client.client.op.ArtifactHandler;
+import org.harbor.client.client.op.Artifacts;
+import org.harbor.client.client.op.RepositoryHandler;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -11,43 +14,48 @@ import java.util.Objects;
  * @author lr
  * @date 2021/2/23
  */
-public class RepositoryHandler {
+class RepositoryHandlerImpl implements RepositoryHandler {
 
     private final String repositoryBaseApi;
     private final String repositoryName;
-    private final Repositories repositories;
+    private final DefaultHarborClientV1 client;
 
-    public RepositoryHandler(String repositoryBaseApi, String repositoryName, Repositories repositories) {
+    RepositoryHandlerImpl(String repositoryBaseApi, String repositoryName, DefaultHarborClientV1 client) {
         this.repositoryBaseApi = repositoryBaseApi;
         this.repositoryName = repositoryName;
-        this.repositories = repositories;
+        this.client = client;
     }
 
+    @Override
     public Repository get() {
-        Repository repository = repositories.getClient().get(getRepositoryApi(), Repository.class);
+        Repository repository = client.get(getRepositoryApi(), Repository.class);
         return repository;
     }
 
+    @Override
     public HarborResponse delete() {
-        HarborResponse response = repositories.getClient().delete(getRepositoryApi());
+        HarborResponse response = client.delete(getRepositoryApi());
         return response;
     }
 
+    @Override
     public HarborResponse update(Repository repository) {
-        HarborResponse response = repositories.getClient().put(getRepositoryApi(), repository);
+        HarborResponse response = client.put(getRepositoryApi(), repository);
         return response;
     }
 
+    @Override
     public Artifacts artifacts() {
-        return new Artifacts(repositories.getClient(), repositoryBaseApi, repositoryName);
+        return new ArtifactsImpl(client, repositoryBaseApi, repositoryName);
     }
 
+    @Override
     public ArtifactHandler artifact(String reference) {
         Objects.requireNonNull(repositoryName, "reference can not be null");
         return artifacts().artifact(reference);
     }
 
-    public String getRepositoryApi() {
+    private String getRepositoryApi() {
         return repositoryBaseApi + "/" + HttpUtil.encodeParams(repositoryName, StandardCharsets.UTF_8);
     }
 

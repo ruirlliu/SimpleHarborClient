@@ -1,11 +1,11 @@
-package org.harbor.client.client.v1;
+package org.harbor.client.client;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.util.EntityUtils;
-import org.harbor.client.client.v1.exception.HarborClientException;
-import org.harbor.client.client.v1.flag.ResponseConfigure;
+import org.harbor.client.client.exception.HarborClientException;
+import org.harbor.client.client.flag.ResponseConfigure;
 
 import java.io.IOException;
 

@@ -5,9 +5,8 @@ import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.harbor.client.client.v1.DefaultHarborClientV1;
-import org.harbor.client.client.v1.HarborClientV1;
-import org.harbor.client.client.v1.flag.ResponseConfigure;
+import org.harbor.client.client.flag.ResponseConfigure;
+import org.harbor.client.client.op.impl.DefaultHarborClientV1;
 
 import java.util.concurrent.TimeUnit;
 

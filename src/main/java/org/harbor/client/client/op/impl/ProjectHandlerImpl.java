@@ -1,12 +1,16 @@
-package org.harbor.client.client.v1.op;
+package org.harbor.client.client.op.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import org.harbor.client.client.model.ListFilter;
 import org.harbor.client.client.model.Project;
 import org.harbor.client.client.model.ProjectReq;
 import org.harbor.client.client.model.ScannerRegistration;
-import org.harbor.client.client.v1.HarborResponse;
-import org.harbor.client.client.v1.exception.HarborClientException;
+import org.harbor.client.client.HarborResponse;
+import org.harbor.client.client.exception.HarborClientException;
+import org.harbor.client.client.op.ProjectHandler;
+import org.harbor.client.client.op.Projects;
+import org.harbor.client.client.op.Repositories;
+import org.harbor.client.client.op.RepositoryHandler;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,18 +19,21 @@ import java.util.Objects;
  * @author lr
  * @date 2021/2/23
  */
-public class ProjectHandler {
+class ProjectHandlerImpl implements ProjectHandler {
 
     private final String projectBaseApi;
     private final String projectName;
     private final Projects projects;
+    private final DefaultHarborClientV1 client;
 
-    public ProjectHandler(String projectBaseApi, String projectName, Projects projects) {
+    ProjectHandlerImpl(String projectBaseApi, String projectName, Projects projects, DefaultHarborClientV1 client) {
         this.projectBaseApi = projectBaseApi;
         this.projectName = projectName;
         this.projects = projects;
+        this.client = client;
     }
 
+    @Override
     public Project get() {
         List<Project> list = projects.list(ListFilter.builder().query(projectName).page(1).pageSize(1000).build());
         if (CollUtil.isEmpty(list)) {
@@ -40,42 +47,44 @@ public class ProjectHandler {
         return null;
     }
 
-    public HarborResponse delete() throws HarborClientException {
+    @Override
+    public HarborResponse delete()  {
         Project project = this.get();
         if (project == null) {
             throw new HarborClientException(-1, "project " + projectName + " not exist");
         }
-        return projects.getClient().delete(projectBaseApi + "/" + project.getProjectId());
+        return client.delete(projectBaseApi + "/" + project.getProjectId());
     }
 
-    public HarborResponse update(ProjectReq req) throws HarborClientException {
+    @Override
+    public HarborResponse update(ProjectReq req)  {
         Project project = this.get();
         if (project == null) {
             throw new HarborClientException(-1, "project " + projectName + " not exist");
         }
-        return projects.getClient().put(projectBaseApi + "/" + project.getProjectId(), req);
+        return client.put(projectBaseApi + "/" + project.getProjectId(), req);
     }
 
+    @Override
     public boolean exist() {
-        return projects.getClient().head(projectBaseApi + "?project_name=" + projectName).success();
+        return client.head(projectBaseApi + "?project_name=" + projectName).success();
     }
 
-    public String getProjectName() {
-        return projectName;
-    }
-
+    @Override
     public ScannerRegistration scanner() {
         Project project = this.get();
         if (project == null) {
             throw new HarborClientException(-1, "project " + projectName + " not exist");
         }
-        return projects.getClient().get(projectBaseApi + "/" + project.getProjectId() + "/scanner", ScannerRegistration.class);
+        return client.get(projectBaseApi + "/" + project.getProjectId() + "/scanner", ScannerRegistration.class);
     }
 
+    @Override
     public Repositories repositories() {
-        return new Repositories(projects.getClient(), projectBaseApi, projectName);
+        return new RepositoriesImpl(client, projectBaseApi, projectName);
     }
 
+    @Override
     public RepositoryHandler repository(String repositoryName) {
         Objects.requireNonNull(repositoryName, "repoKye can not be null");
         return repositories().repository(repositoryName);

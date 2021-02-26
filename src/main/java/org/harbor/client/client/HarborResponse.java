@@ -1,4 +1,4 @@
-package org.harbor.client.client.v1;
+package org.harbor.client.client;
 
 import lombok.Data;
 

@@ -1,12 +1,12 @@
-package org.harbor.client.client.v1.op;
+package org.harbor.client.client.op.impl;
 
 import cn.hutool.core.util.StrUtil;
+import org.harbor.client.client.HarborResponse;
+import org.harbor.client.client.exception.HarborClientException;
 import org.harbor.client.client.model.ListFilter;
 import org.harbor.client.client.model.Project;
 import org.harbor.client.client.model.ProjectReq;
-import org.harbor.client.client.v1.DefaultHarborClientV1;
-import org.harbor.client.client.v1.HarborResponse;
-import org.harbor.client.client.v1.exception.HarborClientException;
+import org.harbor.client.client.op.ProjectHandler;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,18 +15,19 @@ import java.util.Objects;
  * @author lr
  * @date 2021/2/5
  */
-public class Projects {
+class ProjectsImpl implements org.harbor.client.client.op.Projects {
 
     private final String baseApi;
 
     private final DefaultHarborClientV1 client;
 
-    public Projects(DefaultHarborClientV1 client, String baseApi) {
+    ProjectsImpl(DefaultHarborClientV1 client, String baseApi) {
         this.baseApi = baseApi;
         this.client = client;
     }
 
 
+    @Override
     public List<Project> list(ListFilter filter) throws HarborClientException {
         String projectApi = getProjectBaseApi();
         if (filter == null) {
@@ -42,19 +43,16 @@ public class Projects {
         return client.list(projectApi, Project.class);
     }
 
+    @Override
     public ProjectHandler withExactName(String name) throws HarborClientException {
         Objects.requireNonNull(name, "name can not be null");
-        return new ProjectHandler(getProjectBaseApi(), name, this);
+        return new ProjectHandlerImpl(getProjectBaseApi(), name, this, client);
     }
 
+    @Override
     public HarborResponse create(ProjectReq req) {
         Objects.requireNonNull(req, "req can not be null");
         return client.post(getProjectBaseApi(), req);
-    }
-
-
-    protected DefaultHarborClientV1 getClient() {
-        return client;
     }
 
     private String getProjectBaseApi() {

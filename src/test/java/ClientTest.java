@@ -1,9 +1,9 @@
 import org.harbor.client.client.HarborClientBuilder;
 import org.harbor.client.client.model.*;
-import org.harbor.client.client.v1.HarborClientV1;
-import org.harbor.client.client.v1.HarborResponse;
-import org.harbor.client.client.v1.flag.ResponseConfigure;
-import org.harbor.client.client.v1.op.Tags;
+import org.harbor.client.client.HarborClientV1;
+import org.harbor.client.client.HarborResponse;
+import org.harbor.client.client.flag.ResponseConfigure;
+import org.harbor.client.client.op.Tags;
 import org.junit.Test;
 
 import java.util.List;
@@ -134,9 +134,25 @@ public class ClientTest {
     @Test
     public void testUser() {
         List<User> list = clientV1.user().list();
-        User current = clientV1.user().current();
+        User current = clientV1.user().get();
         System.out.println(current);
     }
 
+    @Test
+    public void testHealth() {
+        OverallHealthStatus status = clientV1.health().get();
+        System.out.println(status);
+    }
+
+    @Test
+    public void testGeneralInfo() {
+        HarborClientV1 client = new HarborClientBuilder()
+                .setUrl("http://192.168.1.72:30000/")
+                .setConnectionTimeout(30, TimeUnit.SECONDS)
+                .enable(ResponseConfigure.FAILED_THROW)
+                .buildV1();
+        GeneralInfo generalInfo = client.systemInfo().get();
+        System.out.println(generalInfo);
+    }
 
 }

@@ -1,4 +1,4 @@
-package org.harbor.client.client.v1.flag;
+package org.harbor.client.client.flag;
 
 /**
  * @author lr

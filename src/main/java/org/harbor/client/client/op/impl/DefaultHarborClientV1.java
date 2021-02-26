@@ -1,4 +1,4 @@
-package org.harbor.client.client.v1;
+package org.harbor.client.client.op.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,12 +14,15 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.harbor.client.client.v1.exception.HarborClientException;
-import org.harbor.client.client.v1.op.GeneralSystemInfo;
-import org.harbor.client.client.v1.op.ProjectHandler;
-import org.harbor.client.client.v1.op.Projects;
-import org.harbor.client.client.v1.op.Searches;
-import org.harbor.client.client.v1.op.Users;
+import org.harbor.client.client.DefaultResponseHandler;
+import org.harbor.client.client.HarborClientV1;
+import org.harbor.client.client.HarborResponse;
+import org.harbor.client.client.exception.HarborClientException;
+import org.harbor.client.client.op.GeneralSystemInfos;
+import org.harbor.client.client.op.Healths;
+import org.harbor.client.client.op.ProjectHandler;
+import org.harbor.client.client.op.Projects;
+import org.harbor.client.client.op.Users;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -49,7 +52,7 @@ public class DefaultHarborClientV1 implements HarborClientV1 {
 
     @Override
     public Projects projects() {
-        return new Projects(this, API_BASE);
+        return new ProjectsImpl(this, API_BASE);
     }
 
     @Override
@@ -59,18 +62,24 @@ public class DefaultHarborClientV1 implements HarborClientV1 {
     }
 
     @Override
-    public Searches search() {
-        return new Searches(this, API_BASE);
+    public SearchesImpl search() {
+        return new SearchesImpl(this, API_BASE);
     }
 
     @Override
-    public GeneralSystemInfo systemInfo() {
-        return new GeneralSystemInfo(this, API_BASE);
+    public GeneralSystemInfos systemInfo() {
+        return new GeneralSystemInfoImpl(this, API_BASE);
     }
 
     @Override
     public Users user() {
-        return new Users(this, API_BASE);
+        return new UsersImpl(this, API_BASE);
+    }
+
+
+    @Override
+    public Healths health() {
+        return new HealthsImpl(this, API_BASE);
     }
 
     public <T> List<T> list(String path, Class<T> object) throws HarborClientException {

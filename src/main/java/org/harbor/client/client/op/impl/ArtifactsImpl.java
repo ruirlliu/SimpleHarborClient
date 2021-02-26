@@ -1,10 +1,10 @@
-package org.harbor.client.client.v1.op;
+package org.harbor.client.client.op.impl;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import org.harbor.client.client.model.Artifact;
 import org.harbor.client.client.model.ArtifactListFilter;
-import org.harbor.client.client.v1.DefaultHarborClientV1;
+import org.harbor.client.client.op.ArtifactHandler;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -13,18 +13,19 @@ import java.util.List;
  * @author lr
  * @date 2021/2/24
  */
-public class Artifacts {
+class ArtifactsImpl implements org.harbor.client.client.op.Artifacts {
 
     private final String repositoryBaseApi;
     private final String repositoryName;
     private final DefaultHarborClientV1 client;
 
-    public Artifacts(DefaultHarborClientV1 client, String repositoryBaseApi, String repositoryName) {
+    ArtifactsImpl(DefaultHarborClientV1 client, String repositoryBaseApi, String repositoryName) {
         this.client = client;
         this.repositoryBaseApi = repositoryBaseApi;
         this.repositoryName = repositoryName;
     }
 
+    @Override
     public List<Artifact> list(ArtifactListFilter filter) {
         String artifactBaseApi = getArtifactBaseApi();
         if (filter == null) {
@@ -53,15 +54,12 @@ public class Artifacts {
         return list;
     }
 
+    @Override
     public ArtifactHandler artifact(String reference) {
-        return new ArtifactHandler(getArtifactBaseApi(), reference, this);
+        return new ArtifactHandlerImpl(getArtifactBaseApi(), reference, client);
     }
 
-    protected DefaultHarborClientV1 getClient() {
-        return client;
-    }
-
-    public String getArtifactBaseApi() {
+    private String getArtifactBaseApi() {
         return repositoryBaseApi + "/" + HttpUtil.encodeParams(repositoryName, StandardCharsets.UTF_8) + "/artifacts";
     }
 

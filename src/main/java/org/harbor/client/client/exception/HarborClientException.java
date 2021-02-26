@@ -1,4 +1,4 @@
-package org.harbor.client.client.v1.exception;
+package org.harbor.client.client.exception;
 
 /**
  * @author lr
