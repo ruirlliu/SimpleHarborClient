@@ -22,6 +22,7 @@ import org.harbor.client.client.op.GeneralSystemInfos;
 import org.harbor.client.client.op.Healths;
 import org.harbor.client.client.op.ProjectHandler;
 import org.harbor.client.client.op.Projects;
+import org.harbor.client.client.op.Searches;
 import org.harbor.client.client.op.Users;
 
 import java.io.IOException;
@@ -62,7 +63,7 @@ public class DefaultHarborClientV1 implements HarborClientV1 {
     }
 
     @Override
-    public SearchesImpl search() {
+    public Searches search() {
         return new SearchesImpl(this, API_BASE);
     }
 

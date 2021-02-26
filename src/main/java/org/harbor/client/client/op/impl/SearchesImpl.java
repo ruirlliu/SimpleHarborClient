@@ -3,6 +3,7 @@ package org.harbor.client.client.op.impl;
 import cn.hutool.core.util.StrUtil;
 import org.harbor.client.client.model.Search;
 import org.harbor.client.client.model.SearchType;
+import org.harbor.client.client.op.Searches;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -12,11 +13,10 @@ import java.util.Set;
  * @author lr
  * @date 2021/2/24
  */
-class SearchesImpl {
+class SearchesImpl implements org.harbor.client.client.op.Searches {
 
     private final DefaultHarborClientV1 client;
     private final String baseApi;
-
     private String query;
 
     private Set<SearchType> types = new HashSet<>(8);
@@ -25,6 +25,7 @@ class SearchesImpl {
         this.baseApi = baseApi;
     }
 
+    @Override
     public Search doSearch() {
         String searchApi = getSearchApi();
         if (StrUtil.isNotEmpty(query)) {
@@ -34,17 +35,18 @@ class SearchesImpl {
         return search;
     }
 
-    public SearchesImpl query(String query) {
+    @Override
+    public Searches query(String query) {
         return query(query, SearchType.values());
     }
 
-    private SearchesImpl query(String name, SearchType... type) {
+    private Searches query(String name, SearchType... type) {
         this.query = name;
         types.addAll(Arrays.asList(type));
         return this;
     }
 
-    public String getSearchApi() {
+    private String getSearchApi() {
         return baseApi + "/search";
     }
 }

@@ -5,7 +5,7 @@ import org.harbor.client.client.op.GeneralSystemInfos;
 import org.harbor.client.client.op.Healths;
 import org.harbor.client.client.op.ProjectHandler;
 import org.harbor.client.client.op.Projects;
-import org.harbor.client.client.op.impl.SearchesImpl;
+import org.harbor.client.client.op.Searches;
 import org.harbor.client.client.op.Users;
 
 /**
@@ -20,7 +20,7 @@ public interface HarborClientV1 {
 
     ProjectHandler project(String projectName);
 
-    SearchesImpl search();
+    Searches search();
 
     GeneralSystemInfos systemInfo();
 
