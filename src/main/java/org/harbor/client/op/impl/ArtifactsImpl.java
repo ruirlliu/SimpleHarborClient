@@ -1,7 +1,7 @@
 package org.harbor.client.op.impl;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpUtil;
+import cn.hutool.core.util.URLUtil;
 import org.harbor.client.model.Artifact;
 import org.harbor.client.model.ArtifactListFilter;
 import org.harbor.client.op.ArtifactHandler;
@@ -61,7 +61,7 @@ class ArtifactsImpl implements Artifacts {
     }
 
     private String getArtifactBaseApi() {
-        return repositoryBaseApi + "/" + HttpUtil.encodeParams(repositoryName, StandardCharsets.UTF_8) + "/artifacts";
+        return repositoryBaseApi + "/" + URLUtil.encodeQuery(repositoryName, StandardCharsets.UTF_8) + "/artifacts";
     }
 
 }

@@ -1,5 +1,7 @@
 package org.harbor.client.model;
 
+import cn.hutool.core.util.StrUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,7 +26,8 @@ public class Repository {
     @JsonProperty("creation_time")
     private Date createTime;
 
-    private String name;
+    @JsonProperty("name")
+    private String fullName;
 
     @JsonProperty("project_id")
     private Integer projectId;
@@ -36,5 +39,10 @@ public class Repository {
 
     @JsonProperty("pull_count")
     private Integer pullCount;
+
+    @JsonIgnore
+    public String getName() {
+        return StrUtil.isBlank(fullName) ? null : fullName.substring(fullName.indexOf("/") + 1) ;
+    }
 
 }

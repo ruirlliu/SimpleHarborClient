@@ -172,7 +172,12 @@ public class DefaultHarborClientV1 implements HarborClientV1 {
         return httpRequestBase;
     }
 
-//    static  ObjectMapper configObjectMapper(ObjectMapper objectMapper) {
+    @Override
+    public void close() throws IOException {
+        httpClient.close();
+    }
+
+    //    static  ObjectMapper configObjectMapper(ObjectMapper objectMapper) {
 //        SimpleModule module = new SimpleModule();
 //        module.addDeserializer(Type.class, new JsonDeserializer<Type>() {
 //            @Override

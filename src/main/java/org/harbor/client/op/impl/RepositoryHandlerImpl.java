@@ -1,6 +1,6 @@
 package org.harbor.client.op.impl;
 
-import cn.hutool.http.HttpUtil;
+import cn.hutool.core.util.URLUtil;
 import org.harbor.client.HarborResponse;
 import org.harbor.client.model.Repository;
 import org.harbor.client.op.ArtifactHandler;
@@ -56,7 +56,7 @@ class RepositoryHandlerImpl implements RepositoryHandler {
     }
 
     private String getRepositoryApi() {
-        return repositoryBaseApi + "/" + HttpUtil.encodeParams(repositoryName, StandardCharsets.UTF_8);
+        return repositoryBaseApi + "/" + URLUtil.encodeQuery(repositoryName, StandardCharsets.UTF_8);
     }
 
 }

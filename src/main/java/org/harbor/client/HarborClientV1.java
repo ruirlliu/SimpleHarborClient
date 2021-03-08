@@ -8,11 +8,13 @@ import org.harbor.client.op.Projects;
 import org.harbor.client.op.Searches;
 import org.harbor.client.op.Users;
 
+import java.io.Closeable;
+
 /**
  * @author lr
  * @date 2021/2/5
  */
-public interface HarborClientV1 {
+public interface HarborClientV1 extends Closeable {
 
     String API_BASE = "/api/v2.0";
 
