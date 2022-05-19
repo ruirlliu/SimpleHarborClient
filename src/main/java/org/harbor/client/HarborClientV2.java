@@ -14,7 +14,7 @@ import java.io.Closeable;
  * @author lr
  * @date 2021/2/5
  */
-public interface HarborClientV1 extends Closeable {
+public interface HarborClientV2 extends Closeable {
 
     String API_BASE = "/api/v2.0";
 

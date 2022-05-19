@@ -5,7 +5,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.util.EntityUtils;
 import org.harbor.client.exception.HarborClientException;
-import org.harbor.client.flag.ResponseConfigure;
 
 import java.io.IOException;
 
@@ -15,10 +14,8 @@ import java.io.IOException;
  */
 public class DefaultResponseHandler implements ResponseHandler<HarborResponse> {
 
-    private final int flag;
 
-    public DefaultResponseHandler(int flag) {
-        this.flag = flag;
+    public DefaultResponseHandler() {
     }
 
     @Override
@@ -31,12 +28,9 @@ public class DefaultResponseHandler implements ResponseHandler<HarborResponse> {
             body = EntityUtils.toString(entity);
         }
         if (!harborResponse.success()) {
-            if (ResponseConfigure.FAILED_THROW.enabled(flag)) {
-                throw new HarborClientException(statusCode, body == null ? "response content empty" : body);
-            }
+            throw new HarborClientException(statusCode, body == null ? "response content empty" : body);
         }
         harborResponse.setBody(body);
         return harborResponse;
-//      T body = mapper.readValue(entity.getContent(), new TypeReference<T>() {});
     }
 }

@@ -15,7 +15,7 @@ import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.harbor.client.DefaultResponseHandler;
-import org.harbor.client.HarborClientV1;
+import org.harbor.client.HarborClientV2;
 import org.harbor.client.HarborResponse;
 import org.harbor.client.exception.HarborClientException;
 import org.harbor.client.op.GeneralSystemInfos;
@@ -34,7 +34,7 @@ import java.util.Objects;
  * @author lr
  * @date 2021/2/5
  */
-public class DefaultHarborClientV1 implements HarborClientV1 {
+public class DefaultHarborClientV1 implements HarborClientV2 {
 
     private final String url;
 
@@ -44,11 +44,11 @@ public class DefaultHarborClientV1 implements HarborClientV1 {
 
     private final ResponseHandler<HarborResponse> handler;
 
-    public DefaultHarborClientV1(String url, String accessToken, CloseableHttpClient httpClient, int configure) {
+    public DefaultHarborClientV1(String url, String accessToken, CloseableHttpClient httpClient) {
         this.url = url;
         this.accessToken = accessToken;
         this.httpClient = httpClient;
-        handler = new DefaultResponseHandler(configure);
+        handler = new DefaultResponseHandler();
     }
 
     @Override

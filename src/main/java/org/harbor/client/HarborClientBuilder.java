@@ -10,7 +10,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContexts;
-import org.harbor.client.flag.ResponseConfigure;
 import org.harbor.client.op.impl.DefaultHarborClientV1;
 
 import javax.net.ssl.SSLContext;
@@ -39,7 +38,7 @@ public class HarborClientBuilder {
 
     private int connectionTimeout;
 
-    private int configure = ResponseConfigure.DEFAULT_CONFIGURE;
+//    private int configure = ResponseConfigure.DEFAULT_CONFIGURE;
 
     private boolean ignoreSsl;
 
@@ -78,23 +77,23 @@ public class HarborClientBuilder {
     }
 
     public HarborClientBuilder setConnectionTimeout(Integer connectionTimeout, TimeUnit timeUnit) {
-        this.connectionTimeout = (int) timeUnit.toMillis((long) connectionTimeout);
+        this.connectionTimeout = (int) timeUnit.toMillis(connectionTimeout);
         return this;
     }
 
-    public HarborClientBuilder enable(ResponseConfigure... cs) {
-        for (ResponseConfigure c : cs) {
-            configure |= c.getMask();
-        }
-        return this;
-    }
+//    public HarborClientBuilder enable(ResponseConfigure... cs) {
+//        for (ResponseConfigure c : cs) {
+//            configure |= c.getMask();
+//        }
+//        return this;
+//    }
 
-    public HarborClientBuilder disable(ResponseConfigure... cs) {
-        for (ResponseConfigure c : cs) {
-            configure &= ~c.getMask();
-        }
-        return this;
-    }
+//    public HarborClientBuilder disable(ResponseConfigure... cs) {
+//        for (ResponseConfigure c : cs) {
+//            configure &= ~c.getMask();
+//        }
+//        return this;
+//    }
 
     public HarborClientBuilder setIgnoreSsl(boolean ignoreSsl) {
         this.ignoreSsl = ignoreSsl;
@@ -103,8 +102,8 @@ public class HarborClientBuilder {
 
 
 
-    public HarborClientV1 buildV1() {
-        return new DefaultHarborClientV1(url, accessToken(), createClient(), configure);
+    public HarborClientV2 buildV1() {
+        return new DefaultHarborClientV1(url, accessToken(), createClient());
     }
 
     private CloseableHttpClient createClient() {
@@ -124,15 +123,12 @@ public class HarborClientBuilder {
 
     private LayeredConnectionSocketFactory buildSsl() {
         if (ignoreSsl) {
-            SSLContext sslContext = null;
+            SSLContext sslContext;
             try {
                 sslContext = SSLContexts.custom().build();
                 sslContext.init(null, new TrustManager[]{new HttpsTrustManager()}, new SecureRandom());
             } catch (NoSuchAlgorithmException | KeyManagementException e) {
-                e.printStackTrace();
-            }
-            if (sslContext == null) {
-                sslContext = SSLContexts.createDefault();
+                throw new RuntimeException(e);
             }
             return new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
         }

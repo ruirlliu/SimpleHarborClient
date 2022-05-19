@@ -1,8 +1,19 @@
 import org.harbor.client.HarborClientBuilder;
-import org.harbor.client.HarborClientV1;
+import org.harbor.client.HarborClientV2;
 import org.harbor.client.HarborResponse;
-import org.harbor.client.flag.ResponseConfigure;
-import org.harbor.client.model.*;
+import org.harbor.client.model.Artifact;
+import org.harbor.client.model.GeneralInfo;
+import org.harbor.client.model.NativeReportSummary;
+import org.harbor.client.model.OverallHealthStatus;
+import org.harbor.client.model.Project;
+import org.harbor.client.model.ProjectMetadata;
+import org.harbor.client.model.ProjectReq;
+import org.harbor.client.model.Repository;
+import org.harbor.client.model.ScannerRegistration;
+import org.harbor.client.model.Search;
+import org.harbor.client.model.SystemInfo;
+import org.harbor.client.model.Tag;
+import org.harbor.client.model.User;
 import org.harbor.client.op.Tags;
 import org.junit.Test;
 
@@ -16,21 +27,22 @@ import java.util.concurrent.TimeUnit;
  */
 public class ClientTest {
 
-    HarborClientV1 clientV1 = new HarborClientBuilder()
+    HarborClientV2 clientV1 = new HarborClientBuilder()
             .setUrl("http://192.168.1.72:30000/")
             .setUsername("admin")
             .setPassword("Harbor123456")
             .setConnectionTimeout(30, TimeUnit.SECONDS)
-            .enable(ResponseConfigure.FAILED_THROW)
             .buildV1();
 
     // --- project
     // get
+    @Test
     public void get() {
         Project test = clientV1.projects().withExactName("test").get();
     }
 
     // delete
+    @Test
     public void delete() {
         HarborResponse response = clientV1.projects().withExactName("test").delete();
     }
@@ -146,10 +158,10 @@ public class ClientTest {
 
     @Test
     public void testGeneralInfo() {
-        HarborClientV1 client = new HarborClientBuilder()
+        HarborClientV2 client = new HarborClientBuilder()
                 .setUrl("http://192.168.1.72:30000/")
                 .setConnectionTimeout(30, TimeUnit.SECONDS)
-                .enable(ResponseConfigure.FAILED_THROW)
+//                .enable(ResponseConfigure.FAILED_THROW)
                 .buildV1();
         GeneralInfo generalInfo = client.systemInfo().get();
         System.out.println(generalInfo);
