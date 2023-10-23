@@ -2,7 +2,7 @@ package org.harbor.client.op.impl;
 
 import org.harbor.client.HarborResponse;
 import org.harbor.client.op.Tags;
-import org.harbor.client.op.TagsHandler;
+import org.harbor.client.op.handler.TagsHandler;
 
 /**
  * @author lr

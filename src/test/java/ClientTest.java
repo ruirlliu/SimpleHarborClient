@@ -32,7 +32,7 @@ public class ClientTest {
             .setUsername("admin")
             .setPassword("Harbor123456")
             .setConnectionTimeout(30, TimeUnit.SECONDS)
-            .buildV1();
+            .buildV2();
 
     // --- project
     // get
@@ -162,7 +162,7 @@ public class ClientTest {
                 .setUrl("http://192.168.1.72:30000/")
                 .setConnectionTimeout(30, TimeUnit.SECONDS)
 //                .enable(ResponseConfigure.FAILED_THROW)
-                .buildV1();
+                .buildV2();
         GeneralInfo generalInfo = client.systemInfo().get();
         System.out.println(generalInfo);
     }

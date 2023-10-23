@@ -6,7 +6,7 @@ import org.harbor.client.exception.HarborClientException;
 import org.harbor.client.model.ListFilter;
 import org.harbor.client.model.Project;
 import org.harbor.client.model.ProjectReq;
-import org.harbor.client.op.ProjectHandler;
+import org.harbor.client.op.handler.ProjectHandler;
 import org.harbor.client.op.Projects;
 
 import java.util.List;
@@ -18,12 +18,9 @@ import java.util.Objects;
  */
 class ProjectsImpl implements Projects {
 
-    private final String baseApi;
+    private final DefaultHarborClientV2 client;
 
-    private final DefaultHarborClientV1 client;
-
-    ProjectsImpl(DefaultHarborClientV1 client, String baseApi) {
-        this.baseApi = baseApi;
+    ProjectsImpl(DefaultHarborClientV2 client) {
         this.client = client;
     }
 
@@ -57,6 +54,6 @@ class ProjectsImpl implements Projects {
     }
 
     private String getProjectBaseApi() {
-        return baseApi + "/projects";
+        return "/projects";
     }
 }

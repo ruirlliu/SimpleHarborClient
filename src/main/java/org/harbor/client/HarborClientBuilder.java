@@ -1,16 +1,19 @@
 package org.harbor.client;
 
-import cn.hutool.core.codec.Base64;
+import lombok.Getter;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContexts;
-import org.harbor.client.op.impl.DefaultHarborClientV1;
+import org.harbor.client.op.impl.DefaultHarborClientV2;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -25,6 +28,7 @@ import java.util.concurrent.TimeUnit;
  * @author lr
  * @date 2021/2/4
  */
+@Getter
 public class HarborClientBuilder {
 
     public HarborClientBuilder() { }
@@ -38,13 +42,7 @@ public class HarborClientBuilder {
 
     private int connectionTimeout;
 
-//    private int configure = ResponseConfigure.DEFAULT_CONFIGURE;
-
     private boolean ignoreSsl;
-
-    public String getUrl() {
-        return url;
-    }
 
     public HarborClientBuilder setUrl(String url) {
         if (url.endsWith("/")) {
@@ -54,46 +52,22 @@ public class HarborClientBuilder {
         return this;
     }
 
-    public String getUsername() {
-        return username;
-    }
 
     public HarborClientBuilder setUsername(String username) {
         this.username = username;
         return this;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
     public HarborClientBuilder setPassword(String password) {
         this.password = password;
         return this;
     }
 
-    public Integer getConnectionTimeout() {
-        return connectionTimeout;
-    }
-
     public HarborClientBuilder setConnectionTimeout(Integer connectionTimeout, TimeUnit timeUnit) {
         this.connectionTimeout = (int) timeUnit.toMillis(connectionTimeout);
         return this;
     }
-
-//    public HarborClientBuilder enable(ResponseConfigure... cs) {
-//        for (ResponseConfigure c : cs) {
-//            configure |= c.getMask();
-//        }
-//        return this;
-//    }
-
-//    public HarborClientBuilder disable(ResponseConfigure... cs) {
-//        for (ResponseConfigure c : cs) {
-//            configure &= ~c.getMask();
-//        }
-//        return this;
-//    }
 
     public HarborClientBuilder setIgnoreSsl(boolean ignoreSsl) {
         this.ignoreSsl = ignoreSsl;
@@ -102,11 +76,13 @@ public class HarborClientBuilder {
 
 
 
-    public HarborClientV2 buildV1() {
-        return new DefaultHarborClientV1(url, accessToken(), createClient());
+    public HarborClientV2 buildV2() {
+        return new DefaultHarborClientV2(url, createClientBuilder().build());
     }
 
-    private CloseableHttpClient createClient() {
+    private HttpClientBuilder createClientBuilder() {
+        CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        credsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(this.username, this.password));
         return HttpClientBuilder.create()
             .setDefaultRequestConfig(RequestConfig.custom()
                 .setConnectTimeout(connectionTimeout)
@@ -114,11 +90,7 @@ public class HarborClientBuilder {
                 .build())
             .setConnectionManager(new PoolingHttpClientConnectionManager())
             .setSSLSocketFactory(buildSsl())
-            .build();
-    }
-
-    private String accessToken() {
-        return Base64.encode(username + ":" + password);
+            .setDefaultCredentialsProvider(credsProvider);
     }
 
     private LayeredConnectionSocketFactory buildSsl() {

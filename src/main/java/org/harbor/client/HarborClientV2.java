@@ -3,7 +3,7 @@ package org.harbor.client;
 
 import org.harbor.client.op.GeneralSystemInfos;
 import org.harbor.client.op.Healths;
-import org.harbor.client.op.ProjectHandler;
+import org.harbor.client.op.handler.ProjectHandler;
 import org.harbor.client.op.Projects;
 import org.harbor.client.op.Searches;
 import org.harbor.client.op.Users;

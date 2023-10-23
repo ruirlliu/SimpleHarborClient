@@ -9,13 +9,11 @@ import org.harbor.client.op.Healths;
  */
 class HealthsImpl implements Healths {
 
-    private final DefaultHarborClientV1 client;
+    private final DefaultHarborClientV2 client;
 
-    private final String baseApi;
 
-    HealthsImpl(DefaultHarborClientV1 client, String baseApi) {
+    HealthsImpl(DefaultHarborClientV2 client) {
         this.client = client;
-        this.baseApi = baseApi;
     }
 
     @Override
@@ -24,7 +22,7 @@ class HealthsImpl implements Healths {
     }
 
     public String getItemBaseApi() {
-        return baseApi + "/health";
+        return "/health";
     }
 
 

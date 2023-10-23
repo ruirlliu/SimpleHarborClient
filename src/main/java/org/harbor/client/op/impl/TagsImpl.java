@@ -17,9 +17,9 @@ class TagsImpl implements Tags {
 
     private final String artifactBaseApi;
     private final String reference;
-    private final DefaultHarborClientV1 client;
+    private final DefaultHarborClientV2 client;
 
-    TagsImpl(String artifactBaseApi, String reference, DefaultHarborClientV1 client) {
+    TagsImpl(String artifactBaseApi, String reference, DefaultHarborClientV2 client) {
         this.artifactBaseApi = artifactBaseApi;
         this.reference = reference;
         this.client = client;

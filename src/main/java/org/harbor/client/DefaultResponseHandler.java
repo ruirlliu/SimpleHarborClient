@@ -4,6 +4,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.util.EntityUtils;
+import org.harbor.client.HarborResponse;
 import org.harbor.client.exception.HarborClientException;
 
 import java.io.IOException;

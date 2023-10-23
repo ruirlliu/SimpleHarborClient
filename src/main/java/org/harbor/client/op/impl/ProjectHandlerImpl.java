@@ -7,10 +7,10 @@ import org.harbor.client.model.Project;
 import org.harbor.client.model.ProjectReq;
 import org.harbor.client.model.ScannerRegistration;
 import org.harbor.client.exception.HarborClientException;
-import org.harbor.client.op.ProjectHandler;
+import org.harbor.client.op.handler.ProjectHandler;
 import org.harbor.client.op.Projects;
 import org.harbor.client.op.Repositories;
-import org.harbor.client.op.RepositoryHandler;
+import org.harbor.client.op.handler.RepositoryHandler;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,9 +24,9 @@ class ProjectHandlerImpl implements ProjectHandler {
     private final String projectBaseApi;
     private final String projectName;
     private final Projects projects;
-    private final DefaultHarborClientV1 client;
+    private final DefaultHarborClientV2 client;
 
-    ProjectHandlerImpl(String projectBaseApi, String projectName, Projects projects, DefaultHarborClientV1 client) {
+    ProjectHandlerImpl(String projectBaseApi, String projectName, Projects projects, DefaultHarborClientV2 client) {
         this.projectBaseApi = projectBaseApi;
         this.projectName = projectName;
         this.projects = projects;

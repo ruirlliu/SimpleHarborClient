@@ -3,7 +3,7 @@ package org.harbor.client.op.impl;
 import cn.hutool.core.util.StrUtil;
 import org.harbor.client.model.ListFilter;
 import org.harbor.client.model.Repository;
-import org.harbor.client.op.RepositoryHandler;
+import org.harbor.client.op.handler.RepositoryHandler;
 import org.harbor.client.op.Repositories;
 
 import java.util.List;
@@ -16,9 +16,9 @@ class RepositoriesImpl implements Repositories {
 
     private final String projectBaseApi;
     private final String projectName;
-    private final DefaultHarborClientV1 client;
+    private final DefaultHarborClientV2 client;
 
-    RepositoriesImpl(DefaultHarborClientV1 client, String projectBaseApi, String projectName) {
+    RepositoriesImpl(DefaultHarborClientV2 client, String projectBaseApi, String projectName) {
         this.client = client;
         this.projectBaseApi = projectBaseApi;
         this.projectName = projectName;

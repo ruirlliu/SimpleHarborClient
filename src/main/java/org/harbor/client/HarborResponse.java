@@ -26,22 +26,4 @@ public class HarborResponse {
         return !(status < 200 || status >= 300);
     }
 
-
-
-//    public static Builder status(int status) {
-//        return new Builder(status);
-//    }
-//
-//    static class Builder {
-//        private int status;
-//
-//        private T body;
-//
-//        public Builder(int status) {
-//            this.status = status;
-//        }
-//        public <T> HarborResponse<T> body(T body) {
-//            return new HarborResponse<>(status, body);
-//        }
-//    }
 }

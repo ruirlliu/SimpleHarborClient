@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import org.harbor.client.model.Artifact;
 import org.harbor.client.model.ArtifactListFilter;
-import org.harbor.client.op.ArtifactHandler;
+import org.harbor.client.op.handler.ArtifactHandler;
 import org.harbor.client.op.Artifacts;
 
 import java.nio.charset.StandardCharsets;
@@ -18,9 +18,9 @@ class ArtifactsImpl implements Artifacts {
 
     private final String repositoryBaseApi;
     private final String repositoryName;
-    private final DefaultHarborClientV1 client;
+    private final DefaultHarborClientV2 client;
 
-    ArtifactsImpl(DefaultHarborClientV1 client, String repositoryBaseApi, String repositoryName) {
+    ArtifactsImpl(DefaultHarborClientV2 client, String repositoryBaseApi, String repositoryName) {
         this.client = client;
         this.repositoryBaseApi = repositoryBaseApi;
         this.repositoryName = repositoryName;

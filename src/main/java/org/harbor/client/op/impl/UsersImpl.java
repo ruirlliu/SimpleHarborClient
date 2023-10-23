@@ -11,13 +11,11 @@ import java.util.List;
  */
 class UsersImpl implements Users {
 
-    private final DefaultHarborClientV1 client;
+    private final DefaultHarborClientV2 client;
 
-    private final String baseApi;
 
-    UsersImpl(DefaultHarborClientV1 client, String baseApi) {
+    UsersImpl(DefaultHarborClientV2 client) {
         this.client = client;
-        this.baseApi = baseApi;
     }
 
     @Override
@@ -33,7 +31,7 @@ class UsersImpl implements Users {
 
 
     private String getItemBaseApi() {
-        return baseApi + "/users";
+        return "/users";
     }
 
 }

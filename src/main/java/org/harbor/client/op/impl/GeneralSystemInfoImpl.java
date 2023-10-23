@@ -10,11 +10,11 @@ import org.harbor.client.op.GeneralSystemInfos;
  */
 class GeneralSystemInfoImpl implements GeneralSystemInfos {
 
-    private final DefaultHarborClientV1 client;
+    private final DefaultHarborClientV2 client;
 
     private final String baseApi;
 
-    GeneralSystemInfoImpl(DefaultHarborClientV1 client, String baseApi) {
+    GeneralSystemInfoImpl(DefaultHarborClientV2 client, String baseApi) {
         this.client = client;
         this.baseApi = baseApi;
     }

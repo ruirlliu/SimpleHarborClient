@@ -15,14 +15,12 @@ import java.util.Set;
  */
 class SearchesImpl implements Searches {
 
-    private final DefaultHarborClientV1 client;
-    private final String baseApi;
+    private final DefaultHarborClientV2 client;
     private String query;
 
     private Set<SearchType> types = new HashSet<>(8);
-    SearchesImpl(DefaultHarborClientV1 client, String baseApi) {
+    SearchesImpl(DefaultHarborClientV2 client) {
         this.client = client;
-        this.baseApi = baseApi;
     }
 
     @Override
@@ -47,6 +45,6 @@ class SearchesImpl implements Searches {
     }
 
     private String getSearchApi() {
-        return baseApi + "/search";
+        return "/search";
     }
 }

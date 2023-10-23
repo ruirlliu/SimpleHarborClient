@@ -1,7 +1,8 @@
-package org.harbor.client.op;
+package org.harbor.client.op.handler;
 
 import org.harbor.client.model.Artifact;
 import org.harbor.client.HarborResponse;
+import org.harbor.client.op.Tags;
 import org.harbor.client.op.base.DeleteOp;
 import org.harbor.client.op.base.GetOp;
 

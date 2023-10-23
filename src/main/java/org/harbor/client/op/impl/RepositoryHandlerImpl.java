@@ -3,9 +3,9 @@ package org.harbor.client.op.impl;
 import cn.hutool.core.util.URLUtil;
 import org.harbor.client.HarborResponse;
 import org.harbor.client.model.Repository;
-import org.harbor.client.op.ArtifactHandler;
+import org.harbor.client.op.handler.ArtifactHandler;
 import org.harbor.client.op.Artifacts;
-import org.harbor.client.op.RepositoryHandler;
+import org.harbor.client.op.handler.RepositoryHandler;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -18,9 +18,9 @@ class RepositoryHandlerImpl implements RepositoryHandler {
 
     private final String repositoryBaseApi;
     private final String repositoryName;
-    private final DefaultHarborClientV1 client;
+    private final DefaultHarborClientV2 client;
 
-    RepositoryHandlerImpl(String repositoryBaseApi, String repositoryName, DefaultHarborClientV1 client) {
+    RepositoryHandlerImpl(String repositoryBaseApi, String repositoryName, DefaultHarborClientV2 client) {
         this.repositoryBaseApi = repositoryBaseApi;
         this.repositoryName = repositoryName;
         this.client = client;

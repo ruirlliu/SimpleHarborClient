@@ -2,6 +2,7 @@ package org.harbor.client.op;
 
 import org.harbor.client.model.Artifact;
 import org.harbor.client.model.ArtifactListFilter;
+import org.harbor.client.op.handler.ArtifactHandler;
 
 import java.util.List;
 

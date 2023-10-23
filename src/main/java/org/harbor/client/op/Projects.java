@@ -5,6 +5,7 @@ import org.harbor.client.exception.HarborClientException;
 import org.harbor.client.model.ListFilter;
 import org.harbor.client.model.Project;
 import org.harbor.client.model.ProjectReq;
+import org.harbor.client.op.handler.ProjectHandler;
 
 import java.util.List;
 

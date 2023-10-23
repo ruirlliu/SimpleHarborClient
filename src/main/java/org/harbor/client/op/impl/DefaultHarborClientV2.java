@@ -1,16 +1,10 @@
 package org.harbor.client.op.impl;
 
-import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -18,12 +12,8 @@ import org.harbor.client.DefaultResponseHandler;
 import org.harbor.client.HarborClientV2;
 import org.harbor.client.HarborResponse;
 import org.harbor.client.exception.HarborClientException;
-import org.harbor.client.op.GeneralSystemInfos;
-import org.harbor.client.op.Healths;
-import org.harbor.client.op.ProjectHandler;
-import org.harbor.client.op.Projects;
-import org.harbor.client.op.Searches;
-import org.harbor.client.op.Users;
+import org.harbor.client.op.*;
+import org.harbor.client.op.handler.ProjectHandler;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -34,26 +24,23 @@ import java.util.Objects;
  * @author lr
  * @date 2021/2/5
  */
-public class DefaultHarborClientV1 implements HarborClientV2 {
+public class DefaultHarborClientV2 implements HarborClientV2 {
 
     private final String url;
-
-    private final String accessToken;
 
     private final CloseableHttpClient httpClient;
 
     private final ResponseHandler<HarborResponse> handler;
 
-    public DefaultHarborClientV1(String url, String accessToken, CloseableHttpClient httpClient) {
+    public DefaultHarborClientV2(String url, CloseableHttpClient httpClient) {
         this.url = url;
-        this.accessToken = accessToken;
         this.httpClient = httpClient;
-        handler = new DefaultResponseHandler();
+        this.handler = new DefaultResponseHandler();
     }
 
     @Override
     public Projects projects() {
-        return new ProjectsImpl(this, API_BASE);
+        return new ProjectsImpl(this);
     }
 
     @Override
@@ -64,7 +51,7 @@ public class DefaultHarborClientV1 implements HarborClientV2 {
 
     @Override
     public Searches search() {
-        return new SearchesImpl(this, API_BASE);
+        return new SearchesImpl(this);
     }
 
     @Override
@@ -74,18 +61,17 @@ public class DefaultHarborClientV1 implements HarborClientV2 {
 
     @Override
     public Users user() {
-        return new UsersImpl(this, API_BASE);
+        return new UsersImpl(this);
     }
 
 
     @Override
     public Healths health() {
-        return new HealthsImpl(this, API_BASE);
+        return new HealthsImpl(this);
     }
 
     public <T> List<T> list(String path, Class<T> object) throws HarborClientException {
-        HttpGet httpGet = new HttpGet(url + path);
-        addAccessTokenHeader(httpGet);
+        HttpGet httpGet = new HttpGet(requestPath(path));
         try {
             HarborResponse response = httpClient.execute(httpGet, handler);
             if (!response.success()) {
@@ -94,15 +80,14 @@ public class DefaultHarborClientV1 implements HarborClientV2 {
             ObjectMapper objectMapper = new ObjectMapper();
             CollectionType collectionType = objectMapper.getTypeFactory().constructCollectionType(List.class, object);
             List<T> list = objectMapper.readValue(response.getBody(), collectionType);
-            return list == null ? Collections.emptyList() : list;
+            return list == null ? Collections.<T>emptyList() : list;
         } catch (IOException e) {
             throw new HarborClientException(HttpStatus.SC_INTERNAL_SERVER_ERROR, e.toString());
         }
     }
 
     public <T> T get(String path, Class<T> object) throws HarborClientException {
-        HttpGet httpGet = new HttpGet(url + path);
-        addAccessTokenHeader(httpGet);
+        HttpGet httpGet = new HttpGet(requestPath(path));
         try {
             HarborResponse response = httpClient.execute(httpGet, handler);
             if (response.success()) {
@@ -116,8 +101,7 @@ public class DefaultHarborClientV1 implements HarborClientV2 {
     }
 
     public HarborResponse put(String path, Object o) throws HarborClientException {
-        HttpPut httpPut = new HttpPut(url + path);
-        addAccessTokenHeader(httpPut);
+        HttpPut httpPut = new HttpPut(requestPath(path));
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             httpPut.setEntity(new StringEntity(objectMapper.writeValueAsString(o), ContentType.APPLICATION_JSON));
@@ -129,8 +113,7 @@ public class DefaultHarborClientV1 implements HarborClientV2 {
     }
 
     public HarborResponse post(String path, Object o) throws HarborClientException {
-        HttpPost httpPost = new HttpPost(url + path);
-        addAccessTokenHeader(httpPost);
+        HttpPost httpPost = new HttpPost(requestPath(path));
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             if (o != null) {
@@ -144,8 +127,7 @@ public class DefaultHarborClientV1 implements HarborClientV2 {
     }
 
     public HarborResponse head(String path) throws HarborClientException {
-        HttpHead httpHead = new HttpHead(url + path);
-        addAccessTokenHeader(httpHead);
+        HttpHead httpHead = new HttpHead(requestPath(path));
         try {
             HarborResponse execute = httpClient.execute(httpHead, handler);
             return execute;
@@ -155,8 +137,7 @@ public class DefaultHarborClientV1 implements HarborClientV2 {
     }
 
     public HarborResponse delete(String path) throws HarborClientException {
-        HttpDelete httpDelete = new HttpDelete(url + path);
-        addAccessTokenHeader(httpDelete);
+        HttpDelete httpDelete = new HttpDelete(requestPath(path));
         try {
             HarborResponse execute = httpClient.execute(httpDelete, handler);
             return execute;
@@ -165,43 +146,13 @@ public class DefaultHarborClientV1 implements HarborClientV2 {
         }
     }
 
-    private HttpRequestBase addAccessTokenHeader(HttpRequestBase httpRequestBase) {
-        if (StrUtil.isNotEmpty(accessToken)) {
-            httpRequestBase.addHeader("Authorization", "Basic " + accessToken);
-        }
-        return httpRequestBase;
-    }
-
     @Override
     public void close() throws IOException {
         httpClient.close();
     }
 
-    //    static  ObjectMapper configObjectMapper(ObjectMapper objectMapper) {
-//        SimpleModule module = new SimpleModule();
-//        module.addDeserializer(Type.class, new JsonDeserializer<Type>() {
-//            @Override
-//            public Type deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException {
-//                return null;
-//            }
-//        })
-//    }
 
-//    @Override
-//    public ResponseFailedHandler getFailedHandler() {
-//        return failedHandler;
-//    }
-//
-//    @Override
-//    public void setFailedHandler(ResponseFailedHandler handler) {
-//        Objects.requireNonNull(handler, "ResponseFailedHandler can not be null");
-//        this.failedHandler = handler;
-//    }
-
-//    private void handlerResponse(HttpResponse response) throws IOException {
-//        ResponseFailedHandler failedHandler = getFailedHandler();
-//        if (failedHandler.isFailed(response)) {
-//            failedHandler.handleFailed(response);
-//        }
-//    }
+    private String requestPath(String path) {
+        return this.url + API_BASE + path;
+    }
 }
